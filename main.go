@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Go world %s!\n", r.URL.Path[1:])
+	datetime := time.Now()
+	fmt.Fprintf(w, "Go world %s! time now %s\n", r.URL.Path[1:], datetime)
 	log.Println(r.RemoteAddr, r.Method, r.URL)
 }
 
