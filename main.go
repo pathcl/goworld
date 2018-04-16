@@ -8,10 +8,10 @@ import (
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Go world %s!\n", r.URL.Path[1:])
+	log.Println(r.RemoteAddr, r.Method, r.URL)
 }
 
 func main() {
 	http.HandleFunc("/", handler)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
-
