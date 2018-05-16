@@ -1,0 +1,44 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata: 
+  name: goworld
+spec: 
+  replicas: 1
+  template: 
+    metadata: 
+      labels: 
+        app: goworld
+    spec: 
+      containers: 
+        - image: "pathcl/goworld:0.0.1"
+          imagePullPolicy: Always
+          name: goworld
+          ports: 
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  name: goworld-svc
+spec: 
+  ports: 
+     -  port: 80
+        protocol: TCP
+        targetPort: 8080
+  selector: 
+    app: goworld
+  type: NodePort
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+ name: goworld-ingress
+spec:
+ rules:
+   - host: goworld
+     http:
+       paths:
+         - path: /
+           backend:
+             serviceName: goworld
+             servicePort: 80
