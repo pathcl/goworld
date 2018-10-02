@@ -7,11 +7,12 @@ import (
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "0.0.1 %s\n", r.URL.Path[1:])
+	fmt.Fprintf(w, "Hello World!%s\n", r.URL.Path[1:])
 	log.Println(r.RemoteAddr, r.Method, r.URL)
 }
 
 func main() {
 	http.HandleFunc("/", handler)
+        log.Println("Starting...")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
