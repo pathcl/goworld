@@ -1,44 +1,67 @@
-apiVersion: apps/v1beta1
-kind: Deployment
-metadata: 
-  name: goworld
-spec: 
-  replicas: 1
-  template: 
-    metadata: 
-      labels: 
-        app: goworld
-    spec: 
-      containers: 
-        - image: "pathcl/goworld:0.0.1"
-          imagePullPolicy: Always
-          name: goworld
-          ports: 
-            - containerPort: 8080
 ---
-apiVersion: v1
-kind: Service
-metadata: 
-  name: goworld-svc
-spec: 
-  ports: 
-     -  port: 80
-        protocol: TCP
-        targetPort: 8080
-  selector: 
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: goworld
+  labels:
     app: goworld
-  type: NodePort
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: goworld
+      task: goworld
+  template:
+    metadata:
+      labels:
+        app: goworld
+        task: goworld
+    spec:
+      containers:
+      - name: goworld
+        image: pathcl/goworld:0.0.1
+        resources:
+          requests:
+            memory: "1024Mi"
+        ports:
+        - containerPort: 80
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
- name: goworld-ingress
+  annotations:
+    traefik.frontend.rule.type: PathPrefixStrip
+  generation: 6
+  name: goworld
+  namespace: default
 spec:
- rules:
-   - host: goworld
-     http:
-       paths:
-         - path: /
-           backend:
-             serviceName: goworld
-             servicePort: 80
+  rules:
+  - host: sanmartin.io
+    http:
+      paths:
+      - backend:
+          serviceName: goworld
+          servicePort: http
+        path: /goworld
+status:
+  loadBalancer: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+  name: goworld
+  namespace: default
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: goworld
+    task: goworld
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
