@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: goworld
-        image: pathcl/goworld:0.0.1
+        image: pathcl/goworld:0.0.5
         resources:
           requests:
             memory: "1024Mi"

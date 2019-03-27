@@ -7,7 +7,7 @@ import (
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "0.0.4%s\n", r.URL.Path[1:])
+	fmt.Fprintf(w, "0.0.5%s\n", r.URL.Path[1:])
 	log.Println(r.RemoteAddr, r.Method, r.URL)
 }
 
