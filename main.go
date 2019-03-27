@@ -21,7 +21,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	} else if r.URL.Path[1:] == "homerosimpson" {
 		fmt.Fprintf(w, "%s", time.Now().Format("15:04:05\n"))
 	} else {
-		fmt.Fprintf(w, "%s\n", r.URL.Path[1:])
+		fmt.Fprintf(w, "you tried to access: /%s\n", r.URL.Path[1:])
 	}
 	log.Println(r.RemoteAddr, r.Method, r.URL)
 }
