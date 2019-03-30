@@ -1,5 +1,3 @@
-// display homero
-// display clock
 // expose prometheus metrics
 //	> homero
 //	> clock covilha
@@ -10,23 +8,40 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"time"
 )
 
-func handler(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path[1:] == "covilha" {
-		fmt.Fprintf(w, "%s", time.Now().UTC().Format("15:04:05\n"))
-	} else if r.URL.Path[1:] == "homerosimpson" {
-		fmt.Fprintf(w, "%s", time.Now().Format("15:04:05\n"))
-	} else {
-		fmt.Fprintf(w, "you tried to access: /%s\n", r.URL.Path[1:])
-	}
-	log.Println(r.RemoteAddr, r.Method, r.URL)
+var tmpl = `<html>
+<head>
+    <title>Hello</title>
+</head>
+<body>
+    <img src="https://i.ytimg.com/vi/yWy2jFg6S1s/hqdefault.jpg"></img>
+</body>
+</html>
+`
+
+func handlerHomero(w http.ResponseWriter, r *http.Request) {
+	t := template.New("main")
+	t, _ = t.Parse(tmpl)
+	log.Println(r.RemoteAddr, r.RequestURI[len("/"):])
+	t.Execute(w, r.RequestURI[len("/"):])
 }
+
+func handlerClock(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "%s", time.Now().UTC().Format("15:04:05\n"))
+
+}
+
 func main() {
-	http.HandleFunc("/", handler)
-	log.Println("Starting...")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	server := http.Server{
+		Addr: "127.0.0.1:8080",
+	}
+	http.HandleFunc("/homerosimpson", handlerHomero)
+	http.HandleFunc("/clock", handlerClock)
+	log.Printf("Started")
+	server.ListenAndServe()
 }
