@@ -1,4 +1,4 @@
-// expose prometheus metrics
+// TODO: expose prometheus metrics
 //	> homero
 //	> clock covilha
 //
@@ -41,7 +41,7 @@ func main() {
 		Addr: ":8080",
 	}
 	http.HandleFunc("/homerosimpson", handlerHomero)
-	http.HandleFunc("/clock", handlerClock)
+	http.HandleFunc("/covilha", handlerClock)
 	log.Printf("Started")
 	server.ListenAndServe()
 }
