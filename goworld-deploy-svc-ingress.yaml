@@ -23,6 +23,8 @@ spec:
         resources:
           requests:
             memory: "1024Mi"
+        securityContext:
+            runAsUser: 1000
         ports:
         - containerPort: 80
 ---
